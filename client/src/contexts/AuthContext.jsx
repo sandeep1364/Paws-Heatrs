@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = "https://paws-hearts.onrender.com";
+axios.defaults.baseURL = "https://paws-hearts.onrender.com/api";
 
 const AuthContext = createContext();
 
