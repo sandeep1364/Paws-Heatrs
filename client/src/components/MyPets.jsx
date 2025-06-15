@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { Pets as PetsIcon } from '@mui/icons-material';
+import { API_URL, getUploadUrl } from '../config';
 
 const MyPets = () => {
   const navigate = useNavigate();
@@ -37,28 +38,22 @@ const MyPets = () => {
 
       if (user?.userType === 'business') {
         // For business users, we show pets they listed
-        const response = await axios.get('http://localhost:5000/api/pets/seller', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+        const response = await axios.get(`${API_URL}/pets/seller`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Business user pets retrieved:', response.data);
         setAdoptedPets(response.data);
       } else {
         // For regular users, we show pets they adopted
-        const response = await axios.get('http://localhost:5000/api/pets/adopted', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+        const response = await axios.get(`${API_URL}/pets/adopted`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Adopted pets retrieved:', response.data);
         setAdoptedPets(response.data);
       }
-    } catch (err) {
-      console.error('Error fetching pets:', err);
-      setError(err.response?.data?.message || 'Failed to fetch pets');
+    } catch (error) {
+      console.error('Error fetching my pets:', error);
+      setError(error.response?.data?.message || 'Failed to fetch pets');
     } finally {
       setLoading(false);
     }
@@ -116,7 +111,7 @@ const MyPets = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={`http://localhost:5000/uploads/pets/${pet.images[0]}`}
+                  image={getUploadUrl(`/uploads/pets/${pet.images[0]}`)}
                   alt={pet.name}
                   sx={{ objectFit: 'cover' }}
                 />

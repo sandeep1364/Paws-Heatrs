@@ -38,6 +38,7 @@ import {
 import { format } from 'date-fns';
 import { keyframes } from '@mui/system';
 import { useAuth } from "../contexts/AuthContext";
+import { API_URL, getUploadUrl } from '../config';
 
 // Create animations
 const float = keyframes`
@@ -91,10 +92,8 @@ const MyBlogs = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/api/blogs/user/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await fetch(`${API_URL}/blogs/user/me`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
       if (response.ok) {
@@ -108,15 +107,13 @@ const MyBlogs = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (blogId) => {
     if (!selectedBlog) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${selectedBlog._id}`, {
+      const response = await fetch(`${API_URL}/blogs/${blogId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
       if (response.ok) {
@@ -686,7 +683,7 @@ const MyBlogs = () => {
             Cancel
           </Button>
           <Button 
-            onClick={handleDelete} 
+            onClick={() => handleDelete(selectedBlog._id)} 
             variant="contained"
             sx={{ 
               borderRadius: 8,

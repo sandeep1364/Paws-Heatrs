@@ -23,6 +23,7 @@ import axios from 'axios';
 import Chat from './Chat';
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
+import { API_URL, getUploadUrl } from '../config';
 
 const MyAdoptions = () => {
   const theme = useTheme();
@@ -48,11 +49,8 @@ const MyAdoptions = () => {
     }
 
     try {
-      const response = await axios.get('http://localhost:5000/api/adoption-requests/user', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await axios.get(`${API_URL}/adoption-requests/user`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       
       console.log('Adoption requests retrieved:', response.data);
@@ -136,7 +134,7 @@ const MyAdoptions = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image={`http://localhost:5000/uploads/pets/${adoption.petId.images[0]}`}
+                image={getUploadUrl(`/uploads/pets/${adoption.petId.images[0]}`)}
                 alt={adoption.petId.name}
                 sx={{ objectFit: 'cover' }}
               />

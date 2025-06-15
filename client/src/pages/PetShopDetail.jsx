@@ -37,6 +37,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { API_URL, getUploadUrl } from '../config';
 
 const PetShopDetail = () => {
   const { id } = useParams();
@@ -63,7 +64,7 @@ const PetShopDetail = () => {
       console.log('Fetching shop data for ID:', id);
 
       // Get shop details
-      const shopResponse = await axios.get(`http://localhost:5000/api/users/${id}`);
+      const shopResponse = await axios.get(`${API_URL}/users/${id}`);
       console.log('Full Shop Data:', shopResponse.data);
       console.log('Phone Number Field:', shopResponse.data.phone);
       console.log('All Shop Fields:', Object.keys(shopResponse.data));
@@ -84,7 +85,7 @@ const PetShopDetail = () => {
                 };
               }
 
-              const userResponse = await axios.get(`http://localhost:5000/api/users/${rating.userId}`);
+              const userResponse = await axios.get(`${API_URL}/users/${rating.userId}`);
               return {
                 ...rating,
                 userId: userResponse.data
@@ -107,7 +108,7 @@ const PetShopDetail = () => {
 
       // Get shop's pets
       console.log('Fetching pets for seller ID:', id);
-      const petsResponse = await axios.get(`http://localhost:5000/api/pets/seller/${id}`);
+      const petsResponse = await axios.get(`${API_URL}/pets/seller/${id}`);
       console.log('Pets data response:', petsResponse.data);
       setPets(petsResponse.data);
 
@@ -164,7 +165,7 @@ const PetShopDetail = () => {
       }
 
       const response = await axios.post(
-        `http://localhost:5000/api/users/${id}/ratings`,
+        `${API_URL}/users/${id}/ratings`,
         {
           rating: newReview.rating,
           review: newReview.review.trim(),
@@ -440,7 +441,7 @@ const PetShopDetail = () => {
                       <CardMedia
                         component="img"
                         height="240"
-                        image={`http://localhost:5000/uploads/pets/${pet.images[0]}`}
+                        image={getUploadUrl(`/uploads/pets/${pet.images[0]}`)}
                         alt={pet.name}
                         sx={{
                           objectFit: 'cover',

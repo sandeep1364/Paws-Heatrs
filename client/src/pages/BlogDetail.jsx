@@ -22,6 +22,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { formatDistanceToNow, format } from 'date-fns';
 import { useAuth } from "../contexts/AuthContext";
+import { API_URL, getUploadUrl } from '../config';
 
 function BlogDetail() {
   const { id } = useParams();
@@ -35,7 +36,7 @@ function BlogDetail() {
   const fetchBlog = useCallback(async () => {
     try {
       console.log('Fetching blog with ID:', id);
-      const response = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+      const response = await axios.get(`${API_URL}/blogs/${id}`);
       console.log('Blog data received:', response.data);
       setBlog(response.data);
       setLoading(false);
@@ -59,7 +60,7 @@ function BlogDetail() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/like`,
+        `${API_URL}/blogs/${id}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -89,7 +90,7 @@ function BlogDetail() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/comments`,
+        `${API_URL}/blogs/${id}/comments`,
         { content: comment },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -179,7 +180,7 @@ function BlogDetail() {
 
       <Box 
         component="img"
-        src={`http://localhost:5000/uploads/${blog.image}`}
+        src={getUploadUrl(`/uploads/${blog.image}`)}
         alt={blog.title}
         sx={{
           width: '100%',
