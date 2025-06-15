@@ -24,6 +24,7 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import PetsIcon from '@mui/icons-material/Pets';
 import AddIcon from '@mui/icons-material/Add';
+import { API_URL, getUploadUrl } from '../config';
 
 const petTypes = ['All', 'Dog', 'Cat', 'Bird', 'Fish', 'Small Animal', 'Reptile', 'Other'];
 const petAges = ['All', 'Baby', 'Young', 'Adult', 'Senior'];
@@ -50,7 +51,7 @@ function Pets() {
     const fetchPets = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/pets', {
+        const response = await axios.get(`${API_URL}/pets`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPets(response.data);
@@ -112,7 +113,7 @@ function Pets() {
       const token = localStorage.getItem('token');
       
       // Get the pet data to retrieve seller ID
-      const petResponse = await axios.get(`http://localhost:5000/api/pets/${petId}`, {
+      const petResponse = await axios.get(`${API_URL}/pets/${petId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -132,7 +133,7 @@ function Pets() {
       
       // First create the adoption request
       await axios.post(
-        'http://localhost:5000/api/adoption-requests',
+        `${API_URL}/adoption-requests`,
         {
           petId: String(petId),
           sellerId: String(pet.seller._id)
@@ -147,7 +148,7 @@ function Pets() {
       
       // Then update pet status
       await axios.patch(
-        `http://localhost:5000/api/pets/${petId}`,
+        `${API_URL}/pets/${petId}`,
         { status: 'pending' },
         {
           headers: { 
@@ -406,9 +407,9 @@ function Pets() {
         </Box>
 
         {/* Pet Grid */}
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           {filteredPets.map((pet) => (
-            <Grid item key={pet._id} xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4} key={pet._id}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -432,15 +433,9 @@ function Pets() {
                 <CardMedia
                   component="img"
                   height="240"
-                  image={`http://localhost:5000/uploads/pets/${pet.images[0]}`}
+                  image={getUploadUrl(`/uploads/pets/${pet.images[0]}`)}
                   alt={pet.name}
-                  sx={{ 
-                    objectFit: 'cover',
-                    transition: 'transform 0.4s ease',
-                    '&:hover': {
-                      transform: 'scale(1.1)'
-                    }
-                  }}
+                  sx={{ objectFit: 'cover' }}
                 />
                 <Box className="pet-overlay" sx={{
                   position: 'absolute',
