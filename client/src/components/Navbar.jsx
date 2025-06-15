@@ -22,6 +22,7 @@ import { keyframes } from '@mui/system';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ArticleIcon from '@mui/icons-material/Article';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { getUploadUrl } from '../config';
 
 // Create cute animations
 const wag = keyframes`
@@ -222,29 +223,13 @@ const Navbar = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <IconButton
               onClick={handleMenu}
-              sx={{
-                color: '#fff',
-                '&:hover': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                }
-              }}
+              sx={{ p: 0 }}
             >
               <Avatar
-                src={user?.profilePicture || '/default-profile.png'}
                 alt={user?.name}
-                sx={{
-                  width: 40,
-                  height: 40,
-                  border: `2px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-                  boxShadow: `0 0 10px ${alpha(theme.palette.primary.main, 0.3)}`,
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  bgcolor: theme.palette.primary.main,
-                  color: '#fff',
-                }}
-              >
-                {user?.name?.charAt(0)?.toUpperCase() || user?.businessName?.charAt(0)?.toUpperCase() || 'U'}
-              </Avatar>
+                src={getUploadUrl(user?.profilePicture)}
+                sx={{ width: 40, height: 40 }}
+              />
             </IconButton>
             <Menu
               anchorEl={anchorEl}

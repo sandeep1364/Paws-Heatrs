@@ -23,6 +23,7 @@ import MyOrders from '../components/MyOrders';
 import AdoptionRequests from './AdoptionRequests';
 import Overview from '../components/dashboard/Overview';
 import backgroundPattern from '../images/background-pattern.jpg';
+import { getUploadUrl } from '../config';
 
 // TabPanel component for tab content
 function TabPanel({ children, value, index, ...other }) {
@@ -199,32 +200,14 @@ const Dashboard = () => {
             mb: 2
           }}>
             <Avatar
-              src={user?.profilePicture || '/default-profile.jpg'}
+              src={getUploadUrl(user?.profilePicture)}
+              alt={getDisplayName()}
               sx={{
-                width: 140,
-                height: 140,
-                bgcolor: '#F4A261',
-                fontSize: '3.5rem',
-                mb: 3,
+                width: 120,
+                height: 120,
+                mb: 2,
                 border: '4px solid #fff',
-                boxShadow: '0 4px 20px rgba(244, 162, 97, 0.2)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                animation: 'float 3s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%': {
-                    transform: 'translateY(0px)',
-                  },
-                  '50%': {
-                    transform: 'translateY(-10px)',
-                  },
-                  '100%': {
-                    transform: 'translateY(0px)',
-                  },
-                },
-                '&:hover': {
-                  transform: 'scale(1.05) rotate(5deg)',
-                  boxShadow: '0 8px 30px rgba(244, 162, 97, 0.3)',
-                }
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
               }}
             >
               {getInitial()}
@@ -243,8 +226,8 @@ const Dashboard = () => {
               }}
             >
               {getDisplayName()}
-        </Typography>
-      </Box>
+            </Typography>
+          </Box>
         </Paper>
 
         {/* Dashboard Tabs */}
@@ -365,9 +348,9 @@ const Dashboard = () => {
             <TabPanel value={value} index={3}>
               {isBusiness ? <AdoptionRequests /> : <MyOrders />}
             </TabPanel>
-        </Box>
-      </Paper>
-    </Container>
+          </Box>
+        </Paper>
+      </Container>
     </Box>
   );
 };

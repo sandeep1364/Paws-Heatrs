@@ -1,7 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-
-axios.defaults.baseURL = "https://paws-hearts.onrender.com";
+import { API_URL } from '../config';
 
 const AuthContext = createContext();
 
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       console.log('Fetching user data...');
-      const response = await axios.get('/api/auth/user');
+      const response = await axios.get(`${API_URL}/auth/user`);
       console.log('User data received:', response.data);
       setUser(response.data);
       setIsAuthenticated(true);
@@ -63,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       console.log('Attempting login...');
-      const response = await axios.post('/api/auth/login', {
+      const response = await axios.post(`${API_URL}/auth/login`, {
         email,
         password
       });
@@ -98,7 +97,7 @@ export const AuthProvider = ({ children }) => {
         }
       };
 
-      const response = await axios.post('/api/auth/register', userData, config);
+      const response = await axios.post(`${API_URL}/auth/register`, userData, config);
       console.log('Registration response:', response.data);
       
       const { token, user } = response.data;
