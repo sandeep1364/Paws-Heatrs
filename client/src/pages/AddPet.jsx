@@ -22,6 +22,7 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { PhotoCamera, Clear } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { API_URL } from '../config';
 
 const petTypes = ['Dog', 'Cat', 'Bird', 'Fish', 'Small Animal', 'Reptile', 'Other'];
 const petAges = ['Baby', 'Young', 'Adult', 'Senior'];
@@ -142,10 +143,10 @@ function AddPet() {
       });
 
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/pets', formData, {
+      const response = await axios.post(`${API_URL}/pets`, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
         }
       });
       

@@ -20,6 +20,7 @@ import { format } from 'date-fns';
 import SendIcon from '@mui/icons-material/Send';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { API_URL, getUploadUrl } from '../config';
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -36,11 +37,10 @@ const BlogDetails = () => {
 
   const fetchBlog = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+      const response = await axios.get(`${API_URL}/blogs/${id}`);
       setBlog(response.data);
-    } catch (err) {
-      setError('Failed to fetch blog post');
-      console.error(err);
+    } catch (error) {
+      console.error('Error fetching blog:', error);
     } finally {
       setLoading(false);
     }
@@ -56,11 +56,13 @@ const BlogDetails = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+      await axios.delete(`${API_URL}/blogs/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       navigate('/blogs');
-    } catch (err) {
+    } catch (error) {
       setError('Failed to delete blog post');
-      console.error(err);
+      console.error(error);
     }
   };
 
@@ -68,12 +70,10 @@ const BlogDetails = () => {
     if (!commentText.trim()) return;
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/blogs/${id}/comments`, {
+      const response = await axios.post(`${API_URL}/blogs/${id}/comments`, {
         content: commentText
       }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
       setBlog(prev => ({
@@ -81,18 +81,16 @@ const BlogDetails = () => {
         comments: response.data
       }));
       setCommentText('');
-    } catch (err) {
+    } catch (error) {
       setError('Failed to add comment');
-      console.error(err);
+      console.error(error);
     }
   };
 
   const handleLike = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/blogs/${id}/like`, {}, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      const response = await axios.post(`${API_URL}/blogs/${id}/like`, {}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
 
       setBlog(prev => ({
@@ -100,9 +98,9 @@ const BlogDetails = () => {
         likes: response.data,
         isLiked: !prev.isLiked
       }));
-    } catch (err) {
+    } catch (error) {
       setError('Failed to like/unlike blog');
-      console.error(err);
+      console.error(error);
     }
   };
 
@@ -170,7 +168,7 @@ const BlogDetails = () => {
           {blog.image && (
             <Box 
               component="img"
-              src={`http://localhost:5000/uploads/${blog.image}`}
+              src={getUploadUrl(`/uploads/${blog.image}`)}
               alt={blog.title}
               sx={{
                 width: '100%',

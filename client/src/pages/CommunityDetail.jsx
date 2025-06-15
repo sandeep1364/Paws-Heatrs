@@ -35,6 +35,7 @@ import api from '../services/api';
 import { formatDistanceToNow } from 'date-fns';
 import CommunityChat from '../components/CommunityChat';
 import axios from 'axios';
+import { API_URL, getUploadUrl } from '../config';
 
 const CommunityDetail = () => {
   const { id } = useParams();
@@ -244,11 +245,7 @@ const CommunityDetail = () => {
           <Paper sx={{ p: 3, mb: 3 }}>
             <Box
               component="img"
-              src={community.image
-                ? (community.image.startsWith('http')
-                    ? community.image
-                    : `http://localhost:5000${community.image}`)
-                : '/default-community.jpg'}
+              src={getUploadUrl(community.image)}
               alt={community.name}
               sx={{
                 width: '100%',

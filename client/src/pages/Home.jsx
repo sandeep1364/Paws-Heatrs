@@ -35,7 +35,7 @@ import CustomCursor from '../components/CustomCursor';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionValueEvent } from 'framer-motion';
-import { API_URL } from '../config';
+import { API_URL, getUploadUrl } from '../config';
 
 // Hero image URL
 const heroImage = 'https://images.unsplash.com/photo-1415369629372-26f2fe60c467?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2560&q=80';
@@ -549,7 +549,7 @@ const Home = () => {
                         <Box sx={{ position: 'relative', overflow: 'hidden', pt: '60%' }}>
                           <CardMedia
                             component="img"
-                            image={blog.image ? `http://localhost:5000/uploads/${blog.image}` : 'default-blog-image.jpg'}
+                            image={blog.image ? getUploadUrl(`/uploads/${blog.image}`) : 'default-blog-image.jpg'}
                             alt={blog.title}
                             className="blog-image"
                             sx={{ 

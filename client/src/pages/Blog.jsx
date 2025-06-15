@@ -44,6 +44,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { useAuth } from "../contexts/AuthContext";
+import { API_URL, getUploadUrl } from '../config';
 
 const pawPrints = [
   { top: '10%', left: '5%', rotation: '45deg' },
@@ -84,10 +85,11 @@ function Blog() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/blogs');
+      const response = await axios.get(`${API_URL}/blogs`);
       setBlogs(response.data);
       setLoading(false);
-    } catch (err) {
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
       setError('Failed to fetch blogs');
       setLoading(false);
     }
@@ -142,10 +144,10 @@ function Blog() {
         hasImage: !!selectedImage
       });
 
-      const response = await axios.post('http://localhost:5000/api/blogs', formData, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(`${API_URL}/blogs`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
         }
       });
       
@@ -262,7 +264,7 @@ function Blog() {
                 <Card key={blog._id} sx={{ borderRadius: 4, boxShadow: theme.shadows[4], transition: 'all 0.3s', '&:hover': { boxShadow: theme.shadows[8], transform: 'translateY(-2px)' }, overflow: 'visible', position: 'relative' }}>
                   <CardMedia
                     component="img"
-                    image={`http://localhost:5000/uploads/${blog.image}`}
+                    image={getUploadUrl(`/uploads/${blog.image}`)}
                     alt={blog.title}
                     sx={{ width: '100%', height: 340, objectFit: 'cover', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}
                   />

@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import Chat from '../components/Chat';
+import { API_URL, getUploadUrl } from '../config';
 
 function AdoptionRequests() {
   const navigate = useNavigate();
@@ -67,12 +68,9 @@ function AdoptionRequests() {
       console.log('Fetching requests for seller:', sellerId);
       console.log('User object:', user);
       
-      const response = await axios.get(`http://localhost:5000/api/adoption-requests`, {
+      const response = await axios.get(`${API_URL}/adoption-requests`, {
         params: { sellerId },
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       
       console.log('Received response:', response.data);
@@ -112,33 +110,30 @@ function AdoptionRequests() {
     setConfirmDialogOpen(true);
   };
 
-  const handleConfirmAction = async () => {
+  const handleStatusUpdate = async (status) => {
     try {
       const token = localStorage.getItem('token');
       
-      await axios.patch(
-        `http://localhost:5000/api/adoption-requests/${selectedRequest._id}`,
-        { status: actionType },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.patch(`${API_URL}/adoption-requests/${selectedRequest._id}`, {
+        status
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-      await axios.patch(
-        `http://localhost:5000/api/pets/${selectedRequest.petId._id}`,
-        { 
-          status: actionType === 'approved' ? 'adopted' : 'available',
-          adopter: actionType === 'approved' ? selectedRequest.userId._id : null
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.patch(`${API_URL}/pets/${selectedRequest.petId._id}`, {
+        status: status === 'accepted' ? 'adopted' : 'available'
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-      setSuccess(`Adoption request ${actionType} successfully`);
+      setSuccess(`Adoption request ${status.toUpperCase()} successfully`);
       fetchRequests();
 
       setTimeout(() => {
         setSuccess('');
       }, 5000);
     } catch (err) {
-      setError(err.response?.data?.message || `Failed to ${actionType} adoption request`);
+      setError(err.response?.data?.message || `Failed to ${status} adoption request`);
       
       setTimeout(() => {
         setError('');
@@ -243,7 +238,7 @@ function AdoptionRequests() {
                   <CardMedia
                     component="img"
                     sx={{ width: 200, height: 200, objectFit: 'cover' }}
-                    image={`http://localhost:5000/uploads/pets/${request.petId.images[0]}`}
+                    image={getUploadUrl(`/uploads/pets/${request.petId.images[0]}`)}
                     alt={request.petId.name}
                   />
                   <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -304,10 +299,10 @@ function AdoptionRequests() {
                             variant="contained"
                             color="success"
                             startIcon={<CheckIcon />}
-                            onClick={() => handleAction(request, 'approved')}
+                            onClick={() => handleAction(request, 'accepted')}
                             sx={{ borderRadius: 2, flex: 1 }}
                           >
-                            Approve
+                            Accept
                           </Button>
                           <Button
                             variant="contained"
@@ -337,12 +332,12 @@ function AdoptionRequests() {
           }}
         >
           <DialogTitle>
-            Confirm {actionType === 'approved' ? 'Approval' : 'Rejection'}
+            Confirm {actionType === 'accepted' ? 'Acceptance' : 'Rejection'}
           </DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to {actionType === 'approved' ? 'approve' : 'reject'} this adoption request?
-              {actionType === 'approved' 
+              Are you sure you want to {actionType === 'accepted' ? 'accept' : 'reject'} this adoption request?
+              {actionType === 'accepted' 
                 ? " This will mark the pet as adopted."
                 : " The pet will be available for other adoption requests."}
             </Typography>
@@ -356,11 +351,11 @@ function AdoptionRequests() {
             </Button>
             <Button
               variant="contained"
-              color={actionType === 'approved' ? 'success' : 'error'}
-              onClick={handleConfirmAction}
+              color={actionType === 'accepted' ? 'success' : 'error'}
+              onClick={() => handleStatusUpdate(actionType)}
               sx={{ borderRadius: 2 }}
             >
-              Confirm {actionType === 'approved' ? 'Approval' : 'Rejection'}
+              Confirm {actionType === 'accepted' ? 'Acceptance' : 'Rejection'}
             </Button>
           </DialogActions>
         </Dialog>

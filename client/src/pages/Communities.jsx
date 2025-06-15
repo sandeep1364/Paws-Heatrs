@@ -23,6 +23,7 @@ import {
 import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
+import { API_URL, getUploadUrl } from '../config';
 
 const Communities = () => {
   const [communities, setCommunities] = useState([]);
@@ -215,7 +216,7 @@ const Communities = () => {
           const imageUrl = community.image
             ? (community.image.startsWith('http') 
                 ? community.image 
-                : `http://localhost:5000/uploads/communities/${community.image}`)
+                : getUploadUrl(`/uploads/communities/${community.image}`))
             : 'https://placehold.co/600x400?text=Community+Image';
           
           console.log('Community Image Debug:', {

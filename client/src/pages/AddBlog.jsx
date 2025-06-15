@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import AddIcon from '@mui/icons-material/Add';
 import ImageIcon from '@mui/icons-material/Image';
+import { API_URL } from '../config';
 
 const AddBlog = () => {
   const navigate = useNavigate();
@@ -64,10 +65,10 @@ const AddBlog = () => {
       }
       tags.forEach(tag => formData.append('tags[]', tag));
 
-      const response = await fetch('http://localhost:5000/api/blogs', {
+      const response = await fetch(`${API_URL}/blogs`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
         body: formData
       });
