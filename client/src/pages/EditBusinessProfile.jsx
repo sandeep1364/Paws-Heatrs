@@ -20,6 +20,7 @@ import {
 import { PhotoCamera, Description, Verified, Warning } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import config from '../config';
 
 const businessTypes = [
   'Pet Shop',
@@ -104,7 +105,7 @@ const EditBusinessProfile = () => {
         isVerified: user.isVerified || false,
         verificationMessage: user.verificationMessage || ''
       });
-      setPreviewUrl(user.profilePicture ? `http://localhost:5000/uploads/profiles/${user.profilePicture}` : '');
+      setPreviewUrl(user.profilePicture ? `${config.uploadsUrl}/profiles/${user.profilePicture}` : '');
     }
   }, [user]);
 
@@ -172,7 +173,7 @@ const EditBusinessProfile = () => {
 
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        'http://localhost:5000/api/users/profile',
+        `${config.apiUrl}/users/profile`,
         formDataObj,
         {
           headers: {

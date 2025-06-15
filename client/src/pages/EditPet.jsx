@@ -19,6 +19,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import config from '../config';
 
 const petTypes = ['Dog', 'Cat', 'Bird', 'Fish', 'Small Animal', 'Reptile', 'Other'];
 const petAges = ['Baby', 'Young', 'Adult', 'Senior'];
@@ -50,7 +51,7 @@ function EditPet() {
     const fetchPet = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/pets/${id}`, {
+        const response = await axios.get(`${config.apiUrl}/pets/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPetData(response.data);
@@ -112,7 +113,7 @@ function EditPet() {
         });
       }
 
-      await axios.put(`http://localhost:5000/api/pets/${id}`, formDataToSend, {
+      await axios.put(`${config.apiUrl}/pets/${id}`, formDataToSend, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -309,7 +310,7 @@ function EditPet() {
                         }}
                       >
                         <img
-                          src={`http://localhost:5000/uploads/pets/${image}`}
+                          src={`${config.uploadsUrl}/pets/${image}`}
                           alt={`Pet ${index + 1}`}
                           style={{
                             width: '100%',

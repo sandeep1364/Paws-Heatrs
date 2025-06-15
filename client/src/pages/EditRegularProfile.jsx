@@ -16,6 +16,7 @@ import {
 import { PhotoCamera } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import config from '../config';
 
 const EditRegularProfile = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const EditRegularProfile = () => {
           zipCode: user.address?.zipCode || ''
         }
       });
-      setPreviewUrl(user.profilePicture ? `http://localhost:5000/uploads/profiles/${user.profilePicture}` : '');
+      setPreviewUrl(user.profilePicture ? `${config.uploadsUrl}/profiles/${user.profilePicture}` : '');
     }
   }, [user]);
 
@@ -114,7 +115,7 @@ const EditRegularProfile = () => {
 
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        'http://localhost:5000/api/auth/profile',
+        `${config.apiUrl}/auth/profile`,
         formDataObj,
         {
           headers: {
