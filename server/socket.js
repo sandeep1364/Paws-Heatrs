@@ -9,8 +9,10 @@ const userSockets = new Map();
 function initializeSocket(server) {
   const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:3000",
-      methods: ["GET", "POST"]
+      origin: ["http://localhost:5173", "https://paws-heart.onrender.com", "https://paws-hearts.onrender.com"],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
     }
   });
 

@@ -9,10 +9,12 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "https://paws-heart.onrender.com"],
+  origin: ["http://localhost:5173", "https://paws-heart.onrender.com", "https://paws-hearts.onrender.com"],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400 // 24 hours
 }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
