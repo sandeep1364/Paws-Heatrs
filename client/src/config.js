@@ -1,5 +1,5 @@
 // Get the current environment
-const isDevelopment = import.meta.env.DEV;
+const isDevelopment = window.location.hostname === 'localhost';
 
 // Set base URLs based on environment
 const API_URL = isDevelopment 
