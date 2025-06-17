@@ -1,12 +1,12 @@
 // Get the current environment
-const isDevelopment = window.location.hostname === 'localhost';
+const isDevelopment = typeof window !== 'undefined' ? window.location.hostname === 'localhost' : false;
 
 // Set base URLs based on environment
-const API_URL = isDevelopment 
+export const API_URL = isDevelopment 
   ? 'http://localhost:5000/api'
   : 'https://paws-hearts.onrender.com/api';
 
-const BASE_URL = isDevelopment
+export const BASE_URL = isDevelopment
   ? 'http://localhost:5000'
   : 'https://paws-hearts.onrender.com';
 
