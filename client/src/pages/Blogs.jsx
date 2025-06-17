@@ -40,10 +40,11 @@ import {
   LocalOffer as TagIcon,
   Star as StarIcon,
 } from '@mui/icons-material';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { useAuth } from '../contexts/AuthContext';
+import { getUploadUrl } from '../config';
+import { blogApi } from '../services/api';
 
 // Import motion components
 import { motion } from "framer-motion";
@@ -110,11 +111,14 @@ function Blogs() {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/blogs');
+      console.log('Fetching blogs...'); // Debug log
+      const response = await blogApi.getAll();
+      console.log('Response:', response.data); // Debug log
       setBlogs(response.data);
       setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch blogs');
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      setError('Failed to fetch blogs. Please try again later.');
       setLoading(false);
     }
   };
@@ -168,12 +172,7 @@ function Blogs() {
         hasImage: !!selectedImage
       });
 
-      const response = await axios.post('http://localhost:5000/api/blogs', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await blogApi.create(formData);
       
       console.log('Blog creation response:', response.data);
       
@@ -317,7 +316,7 @@ function Blogs() {
                       >
                         <CardMedia
                           component="img"
-                          image={`http://localhost:5000/uploads/${blog.image}`}
+                          image={getUploadUrl(`/uploads/${blog.image}`)}
                           alt={blog.title}
                           sx={{
                             width: '100%',
