@@ -1,14 +1,14 @@
 // Get the current environment
-const isDevelopment = typeof window !== 'undefined' ? window.location.hostname === 'localhost' : false;
+const isDevelopment = import.meta.env.DEV;
 
 // Set base URLs based on environment
-export const API_URL = isDevelopment 
+export const API_URL = import.meta.env.VITE_API_URL || (isDevelopment 
   ? 'http://localhost:5000/api'
-  : 'https://paws-hearts.onrender.com/api';
+  : 'https://paws-hearts.onrender.com/api');
 
-export const BASE_URL = isDevelopment
+export const BASE_URL = import.meta.env.VITE_BASE_URL || (isDevelopment
   ? 'http://localhost:5000'
-  : 'https://paws-hearts.onrender.com';
+  : 'https://paws-hearts.onrender.com');
 
 export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
