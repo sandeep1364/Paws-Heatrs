@@ -1,6 +1,16 @@
-export const API_URL = import.meta.env.VITE_API_URL;
+// Get the current environment
+const isDevelopment = import.meta.env.DEV;
+
+// Set base URLs based on environment
+const API_URL = isDevelopment 
+  ? 'http://localhost:5000/api'
+  : 'https://paws-hearts.onrender.com/api';
+
+const BASE_URL = isDevelopment
+  ? 'http://localhost:5000'
+  : 'https://paws-hearts.onrender.com';
+
 export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
-export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 // Helper function to get full URL for uploads
 export const getUploadUrl = (path) => {

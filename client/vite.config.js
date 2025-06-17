@@ -7,9 +7,15 @@ export default defineConfig(({ command }) => ({
   server: {
     proxy: command === 'serve' ? {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://paws-hearts.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/uploads': {
+        target: 'https://paws-hearts.onrender.com',
+        changeOrigin: true,
+        secure: true
       }
     } : {}
   }
